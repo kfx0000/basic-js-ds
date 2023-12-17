@@ -17,9 +17,7 @@ class BinarySearchTree {
 
   add(data) {
     let node = new Node(data);
-    if(!this.base) {
-      this.base = node;
-    } else {
+    if(this.base) {
       let curr = this.base;
       while(curr) {
         if(data > curr.data) {
@@ -28,48 +26,71 @@ class BinarySearchTree {
           if(curr.left) curr = curr.left; else {curr.left = node; curr = null;}
         }
       }
+    } else this.base = node;
+  }
+
+  search(data, mode) {
+    let curr = this.base;
+    while(curr) {
+      if(data > curr.data) {
+        if(curr.right) curr = curr.right; else return mode ? false : null;
+      } else if(data < curr.data) {
+        if(curr.left) curr = curr.left; else return mode ? false : null;
+      } else return mode ? true : curr;
     }
   }
 
   has(data) {
-    let curr = this.base;
-    while(curr) {
-      if(data === curr.data) return true;
-      else if(data > curr.data) {
-        if(curr.right) curr = curr.right; else return false;
-      } else {
-        if(curr.left) curr = curr.left; else return false;
-      }
-    }
+    return this.search(data, true);
   }
 
   find(data) {
-    let curr = this.base;
-    while(curr) {
-      if(data === curr.data) return curr;
-      else if(data > curr.data) {
-        if(curr.right) curr = curr.right; else return null;
+    return this.search(data, false);
+  }
+
+  del(node, data) {
+    if(data > node.data) {
+      node.right = this.del(node.right, data);
+      return node;
+    } else if(data < node.data) {
+      node.left = this.del(node.left, data);
+      return node;
+    } else {
+      if(!node.left && !node.right) return null;
+      else if(!node.right) {
+        node = node.left;
+        return node;
+      } 
+      else if(!node.left) {
+        node = node.right;
+        return node;
       } else {
-        if(curr.left) curr = curr.left; else return null;
+        let curr = node.right;
+        while(curr.left) curr = curr.left;
+        node.data = curr.data;
+        node.right = this.del(node.right, curr.data);
+        return node;
       }
     }
   }
 
-  remove(/* data */) {
-    throw new NotImplementedError('Not implemented');
-    // remove line with error and write your code here
+  remove(data) {
+    if(this.has(data) && this.base) this.del(this.base, data);
+  }
+
+  minMax(mode) {
+    let node = this.base;
+    if(mode) while (node.left) node = node.left;
+    else while (node.right) node = node.right;
+    return node.data;
   }
 
   min() {
-    let node = this.base;
-    while (node.left) node = node.left;
-    return node.data;
+    return this.minMax(true);
   }
 
   max() {
-    let node = this.base;
-    while (node.right) node = node.right;
-    return node.data;
+    return this.minMax(false);
   }
 }
 
