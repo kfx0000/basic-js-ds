@@ -1,31 +1,58 @@
 const { NotImplementedError } = require('../extensions/index.js');
 
-// const { Node } = require('../extensions/list-tree.js');
+const { Node } = require('../extensions/list-tree.js');
 
 /**
 * Implement simple binary search tree according to task description
 * using Node from extensions
 */
 class BinarySearchTree {
+  constructor() {
+    this.base = null;
+  }
 
   root() {
-    throw new NotImplementedError('Not implemented');
-    // remove line with error and write your code here
+    return this.base;
   }
 
-  add(/* data */) {
-    throw new NotImplementedError('Not implemented');
-    // remove line with error and write your code here
+  add(data) {
+    let node = new Node(data);
+    if(!this.base) {
+      this.base = node;
+    } else {
+      let curr = this.base;
+      while(curr) {
+        if(data > curr.data) {
+          if(curr.right) curr = curr.right; else {curr.right = node; curr = null;}
+        } else {
+          if(curr.left) curr = curr.left; else {curr.left = node; curr = null;}
+        }
+      }
+    }
   }
 
-  has(/* data */) {
-    throw new NotImplementedError('Not implemented');
-    // remove line with error and write your code here
+  has(data) {
+    let curr = this.base;
+    while(curr) {
+      if(data === curr.data) return true;
+      else if(data > curr.data) {
+        if(curr.right) curr = curr.right; else return false;
+      } else {
+        if(curr.left) curr = curr.left; else return false;
+      }
+    }
   }
 
-  find(/* data */) {
-    throw new NotImplementedError('Not implemented');
-    // remove line with error and write your code here
+  find(data) {
+    let curr = this.base;
+    while(curr) {
+      if(data === curr.data) return curr;
+      else if(data > curr.data) {
+        if(curr.right) curr = curr.right; else return null;
+      } else {
+        if(curr.left) curr = curr.left; else return null;
+      }
+    }
   }
 
   remove(/* data */) {
@@ -34,13 +61,15 @@ class BinarySearchTree {
   }
 
   min() {
-    throw new NotImplementedError('Not implemented');
-    // remove line with error and write your code here
+    let node = this.base;
+    while (node.left) node = node.left;
+    return node.data;
   }
 
   max() {
-    throw new NotImplementedError('Not implemented');
-    // remove line with error and write your code here
+    let node = this.base;
+    while (node.right) node = node.right;
+    return node.data;
   }
 }
 
